@@ -17,9 +17,9 @@ Welcome to the zepl.vim user manual.           *zepl*  *zepl.vim*  *vim-zepl*  *
 ==============================================================================
  1. INTRODUCTION                                                   *zepl-intro*
 
-Zepl.vim is a lightweight REPL integration package for Vim.  It provides tools
-to start and jump to a running REPL, as well as commands and key bindings to
-send text to the REPL.
+Zepl.vim is a lightweight REPL integration package for Vim.  It provides
+commands to start and jump to a running REPL, as well as commands and key
+bindings to send text to the REPL.
 
 Zepl.vim follows several design philosophies:
 
@@ -129,7 +129,7 @@ position to the end of the line.
 Command~
 
 The `:ReplSend` command is somewhat similar to the key binding but has
-different usage, it also only works line-wise.  The command follows this
+different usage, it also only works |linewise|.  The command follows this
 format:
 >
     :[range] ReplSend [text]
@@ -137,9 +137,8 @@ format:
 You can either provide `[range]` or `[text]` to be sent to the REPL.  If you
 give both, only `[text]` will be sent.
 
-`[range]` is an Ex command-line range (see |[range]|). Note that |:ReplSend|
-will only send whole lines; it will ignore column positions (I don't know how
-to fix this, if you do, please submit a patch).
+`[range]` is an Ex command-line range (see |[range]|).  Note: like all
+standard Ex commands, `:ReplSend` will only operate on whole lines.
 
 `[text]` is any arbitrary text you want to send to the REPL.  This is useful
 for scripting.

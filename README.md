@@ -2,9 +2,9 @@
 
 *Lightweight REPL integration for Vim.*
 
-Zepl.vim is a lightweight REPL integration package for Vim.  It provides tools
-to start and jump to a running REPL, as well as commands and key bindings to
-send text to the REPL.
+Zepl.vim is a lightweight REPL integration package for Vim.  It provides
+commands to start and jump to a running REPL, as well as commands and key
+bindings to send text to the REPL.
 
 Zepl.vim follows several design philosophies:
 
@@ -120,8 +120,8 @@ You can either provide `[range]` or `[text]` to be sent to the REPL.  If you
 give both, only `[text]` will be sent.
 
 `[range]` is an Ex command-line range (see [`:help [range]`](https://vimhelp.org/cmdline.txt.html#%5Brange%5D)).
-**Note** that `:ReplSend` will only send whole lines; it will ignore column
-positions (I don't know how to fix this, if you do, please submit a patch).
+**Note**: like all standard Ex commands, `:ReplSend` will only operate on whole
+lines.
 
 `[text]` is any arbitrary text you want to send to the REPL.  This is useful
 for scripting.

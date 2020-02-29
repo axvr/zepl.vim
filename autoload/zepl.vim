@@ -27,7 +27,7 @@ function! zepl#start(cmd, mods, size) abort
         let cmd = a:cmd
     elseif exists('b:repl_config') && has_key(b:repl_config, 'cmd')
         let cmd = b:repl_config['cmd']
-    else
+    elseif !s:repl_bufnr
         call s:error('No command specified')
         return
     endif

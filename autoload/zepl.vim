@@ -12,18 +12,11 @@ function! s:error(msg) abort
 endfunction
 
 function! zepl#start(cmd, mods, size) abort
-    let term_options = {
-                \ 'term_finish': 'close',
-                \ 'close_cb': function('<SID>repl_closed'),
-                \ 'hidden': 1
-                \ }
-
     if a:cmd !=# ''
         if s:repl_bufnr
             call s:error('REPL already running')
             return
         endif
-
         let cmd = a:cmd
     elseif exists('b:repl_config') && has_key(b:repl_config, 'cmd')
         let cmd = b:repl_config['cmd']
@@ -33,14 +26,30 @@ function! zepl#start(cmd, mods, size) abort
     endif
 
     if !s:repl_bufnr
-        let term_options['term_name'] = printf('zepl: %s', cmd)
-        let s:repl_bufnr = term_start(cmd, term_options)
+        let name = printf('zepl: %s', cmd)
+
+        if has('nvim')
+            " XXX: Hacky code to make Neovim's terminal to behave like Vim's.
+            set hidden
+            split | enew
+            call termopen(cmd, {'on_exit': function('<SID>repl_closed')})
+            exec 'file ' . name | let b:term_title = name
+            let s:repl_bufnr = bufnr('%')
+            quit
+        else
+            let s:repl_bufnr = term_start(cmd, {
+                        \ 'term_name': name,
+                        \ 'term_finish': 'close',
+                        \ 'close_cb': function('<SID>repl_closed'),
+                        \ 'hidden': 1
+                        \ })
+        endif
     endif
 
     call zepl#jump(a:mods, a:size)
 endfunction
 
-function! s:repl_closed(channel) abort
+function! s:repl_closed(...) abort
     let s:repl_bufnr = 0
 endfunction
 
@@ -65,6 +74,10 @@ function! zepl#jump(mods, size) abort
         execute a:mods . ' resize ' . a:size
     endif
 
+    if has('nvim')
+        startinsert
+    endif
+
     let &switchbuf = swb
 endfunction
 
@@ -75,10 +88,16 @@ function! zepl#send(text) abort
     endif
 
     let text = trim(a:text) . "\n"
-    for l in split(text,'\n\zs')
-        call term_sendkeys(s:repl_bufnr, l)
-        call term_wait(s:repl_bufnr)
-    endfor
+    let text = split(text, '\n\zs', 1)
+
+    if has('nvim')
+        call jobsend(getbufvar(s:repl_bufnr, '&channel'), text)
+    else
+        for l in text
+            call term_sendkeys(s:repl_bufnr, l)
+            call term_wait(s:repl_bufnr)
+        endfor
+    endif
 endfunction
 
 function! s:get_text(start, end, mode) abort

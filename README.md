@@ -2,9 +2,9 @@
 
 *Lightweight REPL integration for Vim.*
 
-Zepl.vim is a lightweight REPL integration package for Vim.  It provides
-commands to start and jump to a running REPL, as well as commands and key
-bindings to send text to the REPL.
+Zepl.vim is a lightweight REPL integration package for Vim 8.1+ and Neovim.  It
+provides commands to start and jump to a running REPL, as well as commands and
+key bindings to send text to the REPL.
 
 Zepl.vim follows several design philosophies:
 
@@ -12,16 +12,15 @@ Zepl.vim follows several design philosophies:
    configuration options.
 2. Feel like a part of Vim.  Key bindings and commands should work just like
    the built-in ones.
-3. Tiny implementation. (Must not exceed 200 LOC; currently just under 140.)
+3. Tiny implementation. (Must not exceed 200 LOC; currently under 160.)
 
 <!-- TODO: GIF -->
 
-There are a couple of known limitations which may be deal breakers for many
-potential users.  If you cannot live without either of these please submit
-a patch (please remember to follow the design philosophies).
+Zepl.vim has a couple of known limitations:
 
-- Vim 8.1+ only. (No Neovim support)
-- Only 1 REPL can be open at a time (per Vim instance).
+* Only 1 REPL can be open at a time (per Vim instance).
+- [`set hidden`](https://vimhelp.org/options.txt.html#%27hidden%27) is required
+  for Neovim and will be automatically set.
 
 
 ## Installation

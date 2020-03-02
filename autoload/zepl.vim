@@ -100,6 +100,46 @@ function! zepl#send(text) abort
     endif
 endfunction
 
+function! zepl#send_sigint() abort
+  if has('nvim')
+    call jobsend(getbufvar(s:repl_bufnr, '&channel'), "\<C-c>")
+  else
+    call term_sendkeys(s:repl_bufnr, "\<C-c>")
+    call term_wait(s:repl_bufnr)
+  endif
+endfunction
+
+function! zepl#send_eof() abort
+  if has('nvim')
+    call jobsend(getbufvar(s:repl_bufnr, '&channel'), "\<C-d>")
+  else
+    call term_sendkeys(s:repl_bufnr, "\<C-d>")
+    call term_wait(s:repl_bufnr)
+  endif
+endfunction
+
+function! zepl#send_newline() abort
+  if has('nvim')
+    call jobsend(getbufvar(s:repl_bufnr, '&channel'), "\<CR>")
+  else
+    call term_sendkeys(s:repl_bufnr, "\<CR>")
+    call term_wait(s:repl_bufnr)
+  endif
+endfunction
+
+function! zepl#focus() abort
+  if !s:repl_bufnr
+    call s:error('No active REPL')
+    return
+  endif
+  let windows_containing_repl = win_findbuf(s:repl_bufnr)
+  if !empty(windows_containing_repl)
+    call win_gotoid(windows_containing_repl[0])
+  else
+    exe 'sbuffer '.s:repl_bufnr
+  endif
+endfunction
+
 function! s:get_text(start, end, mode) abort
     let [b, start_line, start_col, o] = getpos(a:start)
     let [b, end_line, end_col, o] = getpos(a:end)

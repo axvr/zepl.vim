@@ -207,11 +207,11 @@ If |gz| is already in use, zepl.vim will not enable the key bindings.
 Zepl.vim offers 2 |<Plug>| mappings to set your own keys to use to send text
 to the running REPL.
 
-|<Plug>ReplSendRegion| is for use in |Normal-mode|.
+The first: |<Plug>ReplSendRegion| is for use in |Normal-mode|.
 >
     nmap <silent> <leader>s <Plug>ReplSendRegion
 <
-|<Plug>ReplSendVisual| is for use in |Visual-mode|.
+The second: |<Plug>ReplSendVisual| is for use in |Visual-mode|.
 >
     vmap <silent> <leader>s <Plug>ReplSendVisual
 <

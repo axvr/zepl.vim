@@ -5,6 +5,8 @@
 
 let s:repl_bufnr = 0
 
+let s:newline = has('unix') ? "\n" : "\r\n"
+
 function! s:error(msg) abort
     echohl ErrorMsg
     echo a:msg
@@ -87,7 +89,7 @@ function! zepl#send(text) abort
         return
     endif
 
-    let text = trim(a:text) . "\n"
+    let text = trim(a:text) . s:newline
     let text = split(text, '\n\zs', 1)
 
     if has('nvim')
@@ -128,7 +130,7 @@ function! zepl#send_region(type, ...) abort
         let lines = s:get_text("'[", "']", a:type)
     endif
 
-    call zepl#send(join(lines, "\n"))
+    call zepl#send(join(lines, s:newline))
 
     let &selection = sel_save
 endfunction

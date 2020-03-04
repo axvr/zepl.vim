@@ -118,33 +118,6 @@ function! zepl#send(text, ...) abort
     endif
 endfunction
 
-function! zepl#send_sigint() abort
-  if has('nvim')
-    call jobsend(getbufvar(s:repl_bufnr, '&channel'), "\<C-c>")
-  else
-    call term_sendkeys(s:repl_bufnr, "\<C-c>")
-    call term_wait(s:repl_bufnr)
-  endif
-endfunction
-
-function! zepl#send_eof() abort
-  if has('nvim')
-    call jobsend(getbufvar(s:repl_bufnr, '&channel'), "\<C-d>")
-  else
-    call term_sendkeys(s:repl_bufnr, "\<C-d>")
-    call term_wait(s:repl_bufnr)
-  endif
-endfunction
-
-function! zepl#send_newline() abort
-  if has('nvim')
-    call jobsend(getbufvar(s:repl_bufnr, '&channel'), "\<CR>")
-  else
-    call term_sendkeys(s:repl_bufnr, "\<CR>")
-    call term_wait(s:repl_bufnr)
-  endif
-endfunction
-
 function! zepl#focus() abort
   if !s:repl_bufnr
     call s:error('No active REPL')

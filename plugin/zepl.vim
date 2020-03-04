@@ -11,9 +11,9 @@ endfunction
 command! -range -nargs=* ReplSend call <SID>send_region_or_text(<q-args>, <line1>, <line2>)
 
 nnoremap <silent> <Plug>ReplSendRegion :<C-u>set operatorfunc=zepl#send_region<CR>g@
-nnoremap <silent> <Plug>ReplSendNewline :<C-u>call zepl#send_newline()<CR>
-nnoremap <silent> <Plug>ReplSendCtrlC :<C-u>call zepl#send_sigint()<CR>
-nnoremap <silent> <Plug>ReplSendCtrlD :<C-u>call zepl#send_eof()<CR>
+nnoremap <silent> <Plug>ReplSendNewline :<C-u>call zepl#send("\<CR>", 1)<CR>
+nnoremap <silent> <Plug>ReplSendCtrlC :<C-u>call zepl#send("\<C-c>", 1)<CR>
+nnoremap <silent> <Plug>ReplSendCtrlD :<C-u>call zepl#send("\<C-d>", 1)<CR>
 vnoremap <silent> <Plug>ReplSendVisual :<C-u>call zepl#send_region(visualmode(), 1)<CR>
 nnoremap <silent> <Plug>ReplFocus :<C-u>call zepl#focus()<CR>
 

@@ -6,8 +6,7 @@
 command! -nargs=* -count -complete=shellcmd Repl call zepl#start(<q-args>, <q-mods>, <count>)
 
 function! s:send_region_or_text(text, ...) abort
-    let text = (a:text !=# '' ? a:text : join(getline(a:1, a:2), "\n"))
-    call zepl#send(text)
+    call zepl#send(a:text !=# '' ? a:text : getline(a:1, a:2)))
 endfunction
 command! -range -nargs=* ReplSend call <SID>send_region_or_text(<q-args>, <line1>, <line2>)
 

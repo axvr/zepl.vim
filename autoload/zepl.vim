@@ -83,17 +83,33 @@ function! zepl#jump(mods, size) abort
     let &switchbuf = swb
 endfunction
 
-function! zepl#send(text) abort
+" zepl#send({text} [, {verbatim}])
+function! zepl#send(text, ...) abort
     if !s:repl_bufnr
         call s:error('No active REPL')
         return
     endif
 
-    let text = trim(a:text) . s:newline
-    let text = split(text, '\n\zs', 1)
+    let text = a:text
+    let verbatim = get(a:, 1, 0)
+
+    if type(text) == v:t_list
+        if !verbatim
+            " Add missing newlines.
+            call map(text, {_, val -> val ==# '\n$' ? val : val . s:newline})
+            " Remove trailing and leading white space.
+            let text = split(trim(join(text, '')) . s:newline, '\n\zs', 1)
+        endif
+    else
+        if !verbatim
+            let text = trim(text) . s:newline
+        endif
+
+        let text = split(text, '\n\zs', 1)
+    endif
 
     if has('nvim')
-        call jobsend(getbufvar(s:repl_bufnr, '&channel'), text)
+        call chansend(getbufvar(s:repl_bufnr, '&channel'), text)
     else
         for l in text
             call term_sendkeys(s:repl_bufnr, l)
@@ -130,7 +146,7 @@ function! zepl#send_region(type, ...) abort
         let lines = s:get_text("'[", "']", a:type)
     endif
 
-    call zepl#send(join(lines, s:newline))
+    call zepl#send(lines)
 
     let &selection = sel_save
 endfunction

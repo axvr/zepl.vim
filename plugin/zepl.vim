@@ -6,9 +6,9 @@
 command! -nargs=* -count -complete=shellcmd Repl call zepl#start(<q-args>, <q-mods>, <count>)
 
 function! s:send_region_or_text(text, ...) abort
-    call zepl#send((a:text !=# '' ? a:text : getline(a:1, a:2)))
+    call zepl#send((a:text !=# '' ? a:text : getline(a:1, a:2)), len(a:3))
 endfunction
-command! -range -nargs=* ReplSend call <SID>send_region_or_text(<q-args>, <line1>, <line2>)
+command! -range -bang -nargs=* ReplSend call <SID>send_region_or_text(<q-args>, <line1>, <line2>, <q-bang>)
 
 nnoremap <silent> <Plug>ReplSendRegion :<C-u>set operatorfunc=zepl#send_region<CR>g@
 vnoremap <silent> <Plug>ReplSendVisual :<C-u>call zepl#send_region(visualmode(), 1)<CR>

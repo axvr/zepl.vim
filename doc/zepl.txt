@@ -130,7 +130,7 @@ The `:ReplSend` command is somewhat similar to the key binding but has
 different usage, it also only works |linewise|.  The command follows this
 format:
 >
-    :[range] ReplSend [text]
+    :[range] ReplSend[!] [text]
 <
 You can either provide `[range]` or `[text]` to be sent to the REPL.  If you
 give both, only `[text]` will be sent.
@@ -140,6 +140,10 @@ standard Ex commands, `:ReplSend` will only operate on whole lines.
 
 `[text]` is any arbitrary text you want to send to the REPL.  This is useful
 for scripting.
+
+`[!]` will tell zepl.vim to send the text "verbatim", meaning that it won't
+modify the text in any way.  In regular use this won't be used much, it mainly
+exists for programmability and sending literal characters to the REPL.
 
 Examples:~
 >

@@ -88,6 +88,11 @@ function! s:config(option, default)
     return get(get(b:, 'repl_config', {}), a:option, a:default)
 endfunction
 
+function! zepl#generic_formatter(text, newline)
+    let text = map(a:text, {_, val -> val ==# '\n$' ? val : val . a:newline})
+    return split(trim(join(text, '')) . a:newline, '\n\zs', 1)
+endfunction
+
 " zepl#send({text} [, {verbatim}])
 function! zepl#send(text, ...) abort
     if !s:repl_bufnr
@@ -98,19 +103,12 @@ function! zepl#send(text, ...) abort
     let text = a:text
     let verbatim = get(a:, 1, 0)
 
-    if type(text) == v:t_list
-        if !verbatim
-            " Add missing newlines.
-            call map(text, {_, val -> val ==# '\n$' ? val : val . s:newline})
-            " Remove trailing and leading white space.
-            let text = split(trim(join(text, '')) . s:newline, '\n\zs', 1)
-        endif
-    else
-        if !verbatim
-            let text = trim(text) . s:newline
-        endif
-
+    if type(text) != v:t_list
         let text = split(text, '\n\zs', 1)
+    endif
+
+    if !verbatim
+        let text = s:config('formatter', function('zepl#generic_formatter'))(text, s:newline)
     endif
 
     if has('nvim')

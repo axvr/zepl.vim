@@ -1,7 +1,9 @@
-" =====================================================
-" Description:  Simple REPL in Vim.
+" ===================== ZEPL.VIM =====================
+" Repository:   <https://github.com/axvr/zepl.vim>
 " File:         plugin/zepl.vim
-" =====================================================
+" Author:       Alex Vear <av@axvr.io>
+" Legal:        No rights reserved.  Public domain.
+" ====================================================
 
 command! -nargs=* -count -complete=shellcmd Repl call zepl#start(<q-args>, <q-mods>, <count>)
 

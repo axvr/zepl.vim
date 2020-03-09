@@ -12,13 +12,13 @@ Zepl.vim follows several design philosophies:
    configuration options.
 2. Feel like a part of Vim.  Key bindings and commands should work just like
    the built-in ones.
-3. Tiny implementation. (Must not exceed 200 LOC; currently under 160.)
+3. Tiny implementation. (Must not exceed 200 LOC.)
 
 <!-- TODO: GIF -->
 
 Zepl.vim has a couple of known limitations:
 
-* Only 1 REPL can be open at a time (per Vim instance).
+- Only 1 REPL can be open at a time (per Vim instance).
 - [`set hidden`](https://vimhelp.org/options.txt.html#%27hidden%27) is required
   for Neovim and will be automatically set.
 
@@ -185,5 +185,5 @@ augroup END
 
 All source code, documentation and associated files packaged with zepl.vim are
 dedicated to the public domain.  A full copy of the CC0 (Creative Commons Zero
-1.0) public domain dedication should have been provided with this extension in
-the `COPYING` file.
+v1.0 Universal) public domain dedication should have been provided with this
+extension in the `COPYING` file.

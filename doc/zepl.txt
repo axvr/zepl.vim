@@ -14,6 +14,9 @@ Welcome to the zepl.vim user manual.           *zepl*  *zepl.vim*  *vim-zepl*  *
     6. Change log ................................. |zepl-changelog|
     7. Legal ...................................... |zepl-legal|
 
+Note: Don't forget to check out the |zepl-contrib.txt| manual for additional
+features and improved language support.
+
 ==============================================================================
  1. INTRODUCTION                                                   *zepl-intro*
 
@@ -27,12 +30,9 @@ Zepl.vim follows several design philosophies:
    configuration options.
 2. Feel like a part of Vim.  Key bindings and commands should work just like
    the built-in ones.
-3. Tiny implementation. (Must not exceed 200 LOC; currently under 160.)
+3. Tiny implementation. (Must not exceed 200 LOC.)
 
-------------------------------------------------------------------------------
-                                                             *zepl-limitations*
-
-Zepl.vim has a couple of known limitations:
+There are a couple of known limitations:
 
 * Only 1 REPL can be open at a time (per Vim instance).
 * The 'hidden' option is required for Neovim and will be automatically set.
@@ -166,16 +166,22 @@ Examples:~
  4. CONFIGURATION                                          *zepl-configuration*
 
                                                               *'b:repl_config'*
-This variable allows you configure default REPL settings.
 
-It is a buffer local dictionary.  At the moment only the `cmd` key is used,
-which is the default interpreter for that buffer.  Additional keys may be
-added in the future, and/or other plugins and scripts can add their own keys.
+A buffer local variable containing a |Dictionary| for configuration of default
+REPL settings.
 
-Example~
+There are currently 2 keys in use:
 
-The following example configures default REPLs per filetype for the |:Repl|
-command.
+  * `cmd`        (see: |zepl-cmd|)
+  * `formatter`  (see: |zepl-formatter|)
+
+Other keys may be defined by |zepl-contrib| extensions.
+
+------------------------------------------------------------------------------
+                                                                     *zepl-cmd*
+
+The `cmd` key for 'b:repl_config' allows you to specify a default interpreter
+command used by |:Repl|.
 >
     augroup zepl
         autocmd!
@@ -187,16 +193,37 @@ command.
         autocmd FileType julia      let b:repl_config = { 'cmd': 'julia' }
     augroup END
 <
+Note: for better Python support see: |zepl-python|.
+
 ------------------------------------------------------------------------------
-                                 *'g:zepl_default_maps'*  *'b:zepl_default_maps'*
-Type: boolean~
-Default: 1~
+                                                               *zepl-formatter*
 
-If 'g:zepl_default_maps' is set to `0`, the default key bindings will be
-globally disabled.  Likewise, if 'b:zepl_default_maps' is set to `0`, the
-default key bindings will be disabled in that buffer.
+Before text is sent to the REPL, zepl.vim will run it through a "formatter"
+function.  The default formatter only performs some basic repairs, however you
+can define your own custom formatters to modify the text in any way you wish.
+The most common use case for this is to add support for syntactically unusual
+languages such as Python (see: |zepl-languages| and |zepl-python|).
 
-If |gz| is already in use, zepl.vim will not enable the key bindings.
+The formatter function can be specified using the `formatter` key in the
+'b:repl_config' dictionary.
+>
+    let b:repl_config = {
+            \   'cmd': 'python3',
+            \   'formatter': function("zepl#contrib#python#formatter")
+            \ }
+<
+The formatter will recieve 2 arguments, 1. a list containing each line to be
+processed, and 2. the newline character(s) zepl.vim thinks should be used.  It
+is expected that this function returns a transformed list of lines.
+
+An decent example formatter can be found in the `python.vim` contrib file.
+
+------------------------------------------------------------------------------
+                                                        *'g:zepl_default_maps'*
+If this option is set to `0`, the default key bindings will be disabled.  It
+is expected that all |zepl-contrib| extensions will respect this option.
+
+This option defaults to `1` (use default bindings).
 
 ==============================================================================
  5. REMAPPING KEYS     *<Plug>ReplSendRegion*  *<Plug>ReplSendVisual*  *zepl-remap*
@@ -214,8 +241,7 @@ The second: |<Plug>ReplSendVisual| is for use in |Visual-mode|.
 <
 I recommend setting both to the same key to make it easier to remember.
 
-Note: You will likely want to disable zepl.vim's default key bindings before
-setting your own.  This can be done using 'g:zepl_default_maps'.
+See also: 'g:zepl_default_maps'.
 
 WARNING: make sure to use |nmap| and |vmap| and not |nnoremap| or |vnoremap| as
 those don't work with |<Plug>| mappings.
@@ -223,10 +249,19 @@ those don't work with |<Plug>| mappings.
 ==============================================================================
  6. CHANGE LOG                                                 *zepl-changelog*
 
+v1.0 [2020-03-09]~
+
+  * Added Neovim support.
+  * Added MS Windows support.
+  * Introduction of |zepl-contrib|.
+  * Custom formatters (zepl.vim now supports Python -- |zepl-python|).
+  * Send text to REPL verbatim (disables formatters).
+  * Cleaned up some of the codebase and improved documentation.
+  * Made public function API stable.
+
 v0.1 [2020-02-23]~
 
-  * Initial release (note that the public API is subject to change in future
-    releases before the v1.0 release).
+  * Initial release.
 
 ==============================================================================
  7. LEGAL                                                          *zepl-legal*
@@ -235,8 +270,8 @@ v0.1 [2020-02-23]~
 
 All source code, documentation and associated files packaged with zepl.vim are
 dedicated to the public domain.  A full copy of the CC0 (Creative Commons Zero
-1.0) public domain dedication should have been provided with this extension in
-the `COPYING` file.
+v1.0 Universal) public domain dedication should have been provided with this
+extension in the `COPYING` file.
 
 ------------------------------------------------------------------------------
 vim:et:ts=4:sts=4:sw=4:tw=78:ft=help:norl:

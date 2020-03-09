@@ -1,11 +1,1 @@
-Configuration options:
-  - Keep open after process ended
-
-Clean up code
-Clean up public API
-
-Create contrib area for send files code and more stuff which isn't in core?
-  - Add improved version of `:ReplLoadFile`
-
-Improve README and help file.
-  - Create GIF/images for README?
+Improve README (Add GIF/images?)

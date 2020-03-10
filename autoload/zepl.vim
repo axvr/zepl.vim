@@ -1,39 +1,37 @@
-" =====================================================
-" Description:  Simple REPL in Vim.
+" ===================== ZEPL.VIM =====================
+" Repository:   <https://github.com/axvr/zepl.vim>
 " File:         autoload/zepl.vim
-" =====================================================
+" Author:       Alex Vear <av@axvr.io>
+" Legal:        No rights reserved.  Public domain.
+" ====================================================
 
 let s:repl_bufnr = 0
 
 let s:newline = has('unix') ? "\n" : "\r\n"
 
 function! s:error(msg) abort
-    echohl ErrorMsg
-    echo a:msg
-    echohl NONE
+    echohl ErrorMsg | echo a:msg | echohl NONE
 endfunction
 
-function! zepl#start(cmd, mods, size) abort
-    if a:cmd !=# ''
-        if s:repl_bufnr
-            call s:error('REPL already running')
+" zepl#start(cmd [, {mods} [, {size}]])
+function! zepl#start(cmd, ...) abort
+    if s:repl_bufnr && !empty(a:cmd)
+        call s:error('REPL already running')
+        return
+
+    elseif !s:repl_bufnr
+        let cmd = (empty(a:cmd) ? s:config('cmd', '') : a:cmd)
+
+        if empty(cmd)
+            call s:error('No command specified')
             return
         endif
-        let cmd = a:cmd
-    elseif exists('b:repl_config') && has_key(b:repl_config, 'cmd')
-        let cmd = b:repl_config['cmd']
-    elseif !s:repl_bufnr
-        call s:error('No command specified')
-        return
-    endif
 
-    if !s:repl_bufnr
         let name = printf('zepl: %s', cmd)
 
         if has('nvim')
             " XXX: Hacky code to make Neovim's terminal to behave like Vim's.
-            set hidden
-            split | enew
+            set hidden | split | enew
             call termopen(cmd, {'on_exit': function('<SID>repl_closed')})
             exec 'file ' . name | let b:term_title = name
             let s:repl_bufnr = bufnr('%')
@@ -48,32 +46,35 @@ function! zepl#start(cmd, mods, size) abort
         endif
     endif
 
-    call zepl#jump(a:mods, a:size)
+    call zepl#jump(get(a:, 1, ''), get(a:, 2, 0))
 endfunction
 
 function! s:repl_closed(...) abort
     let s:repl_bufnr = 0
 endfunction
 
-function! zepl#jump(mods, size) abort
+" zepl#jump([{mods} [, {size}]])
+function! zepl#jump(...) abort
     if !s:repl_bufnr
         call s:error('No active REPL')
         return
     endif
 
-    for mod in expand(a:mods, 0, 1)
-        if mod ==# 'hide'
-            return
-        endif
-    endfor
+    let mods = get(a:, 1, '')
+    let size = get(a:, 2, 0)
+
+    " Open REPL in background buffer.
+    if count(expand(mods, 0, 1), 'hide')
+        return
+    endif
 
     let swb = &switchbuf
     set switchbuf+=useopen
 
-    execute a:mods . ' sbuffer ' . s:repl_bufnr
+    execute mods . ' sbuffer ' . s:repl_bufnr
 
-    if a:size
-        execute a:mods . ' resize ' . a:size
+    if size
+        execute mods . ' resize ' . size
     endif
 
     if has('nvim')
@@ -81,6 +82,15 @@ function! zepl#jump(mods, size) abort
     endif
 
     let &switchbuf = swb
+endfunction
+
+function! s:config(option, default)
+    return get(get(b:, 'repl_config', {}), a:option, a:default)
+endfunction
+
+function! zepl#generic_formatter(text, newline)
+    let text = map(a:text, {_, val -> val ==# '\n$' ? val : val . a:newline})
+    return split(trim(join(text, '')) . a:newline, '\n\zs', 1)
 endfunction
 
 " zepl#send({text} [, {verbatim}])
@@ -93,19 +103,12 @@ function! zepl#send(text, ...) abort
     let text = a:text
     let verbatim = get(a:, 1, 0)
 
-    if type(text) == v:t_list
-        if !verbatim
-            " Add missing newlines.
-            call map(text, {_, val -> val ==# '\n$' ? val : val . s:newline})
-            " Remove trailing and leading white space.
-            let text = split(trim(join(text, '')) . s:newline, '\n\zs', 1)
-        endif
-    else
-        if !verbatim
-            let text = trim(text) . s:newline
-        endif
-
+    if type(text) != v:t_list
         let text = split(text, '\n\zs', 1)
+    endif
+
+    if !verbatim
+        let text = s:config('formatter', function('zepl#generic_formatter'))(text, s:newline)
     endif
 
     if has('nvim')

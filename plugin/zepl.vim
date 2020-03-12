@@ -17,7 +17,7 @@ nnoremap <silent> <Plug>ReplSendNewline :<C-u>call zepl#send("\u0d", 1)<CR>
 nnoremap <silent> <Plug>ReplSendCtrlC :<C-u>call zepl#send("\u03", 1)<CR>
 nnoremap <silent> <Plug>ReplSendCtrlD :<C-u>call zepl#send("\u04", 1)<CR>
 vnoremap <silent> <Plug>ReplSendVisual :<C-u>call zepl#send_region(visualmode(), 1)<CR>
-nnoremap <silent> <Plug>ReplFocus :<C-u>call zepl#focus()<CR>
+nnoremap <silent> <Plug>ReplFocus :<C-u>call zepl#jump()<CR>
 
 if get(g:, 'zepl_default_maps', 1)
     nmap <silent> gz <Plug>ReplSendRegion

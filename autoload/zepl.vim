@@ -69,7 +69,7 @@ function! zepl#jump(...) abort
     endif
 
     let swb = &switchbuf
-    set switchbuf+=useopen
+    set switchbuf+=useopen,usetab
 
     execute mods . ' sbuffer ' . s:repl_bufnr
 
@@ -119,19 +119,6 @@ function! zepl#send(text, ...) abort
             call term_wait(s:repl_bufnr)
         endfor
     endif
-endfunction
-
-function! zepl#focus() abort
-  if !s:repl_bufnr
-    call s:error('No active REPL')
-    return
-  endif
-  let windows_containing_repl = win_findbuf(s:repl_bufnr)
-  if !empty(windows_containing_repl)
-    call win_gotoid(windows_containing_repl[0])
-  else
-    exe 'sbuffer '.s:repl_bufnr
-  endif
 endfunction
 
 function! s:get_text(start, end, mode) abort

@@ -7,8 +7,6 @@
 
 let s:repl_bufnr = 0
 
-let s:newline = has('unix') ? "\n" : "\r\n"
-
 function! s:error(msg) abort
     echohl ErrorMsg | echo a:msg | echohl NONE
 endfunction
@@ -88,9 +86,8 @@ function! s:config(option, default)
     return get(get(b:, 'repl_config', {}), a:option, a:default)
 endfunction
 
-function! zepl#generic_formatter(text, newline)
-    let text = map(a:text, {_, val -> val ==# '\n$' ? val : val . a:newline})
-    return split(trim(join(text, '')) . a:newline, '\n\zs', 1)
+function! zepl#generic_formatter(text)
+    return trim(join(a:text, "\<CR>")) . "\<CR>"
 endfunction
 
 " zepl#send({text} [, {verbatim}])
@@ -103,13 +100,15 @@ function! zepl#send(text, ...) abort
     let text = a:text
     let verbatim = get(a:, 1, 0)
 
-    if type(text) != v:t_list
-        let text = split(text, '\n\zs', 1)
+    if !verbatim
+        if type(text) != v:t_list
+            let text = split(text, '\m\C[\n\r]\zs', 1)
+        endif
+
+        let text = s:config('formatter', function('zepl#generic_formatter'))(text)
     endif
 
-    if !verbatim
-        let text = s:config('formatter', function('zepl#generic_formatter'))(text, s:newline)
-    endif
+    let text = split(text, '\m\C[\n\r]\zs', 1)
 
     if has('nvim')
         call chansend(getbufvar(s:repl_bufnr, '&channel'), text)

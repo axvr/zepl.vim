@@ -212,10 +212,16 @@ The formatter function can be specified using the `formatter` key in the
             \   'formatter': function("zepl#contrib#python#formatter")
             \ }
 <
-The formatter will recieve 2 arguments, 1. a list containing each line to be
-processed, and 2. the newline character(s) zepl.vim thinks should be used.  It
-is expected that this function returns a transformed list of lines.
-
+The formatter will recieve 1 argument containing a list of lines to be
+processed.  It is expected that this function returns a string, with the lines
+joined by calling:
+>
+    zepl#generic_formatter(text)
+<
+or:
+>
+    join(text, "\<CR>") . "\<CR>"
+<
 An decent example formatter can be found in the `python.vim` contrib file.
 
 ------------------------------------------------------------------------------

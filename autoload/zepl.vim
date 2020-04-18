@@ -108,11 +108,11 @@ function! zepl#send(text, ...) abort
         let text = s:config('formatter', function('zepl#generic_formatter'))(text)
     endif
 
-    let text = split(text, '\m\C[\n\r]\zs', 1)
-
     if has('nvim')
         call chansend(getbufvar(s:repl_bufnr, '&channel'), text)
     else
+        let text = split(text, '\m\C[\n\r]\zs', 1)
+
         for l in text
             call term_sendkeys(s:repl_bufnr, l)
             call term_wait(s:repl_bufnr)

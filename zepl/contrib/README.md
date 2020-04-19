@@ -1,7 +1,7 @@
 # Contributed code
 
-This is the home of various potentially useful user contributed extensions and
-for zepl.vim.  Nothing here is enabled by default; individual extensions can be
+This is the home of various potentially useful user contributed extensions for
+zepl.vim.  Nothing here is enabled by default; individual extensions can be
 enabled as desired.
 
 Typically these extensions can be enabled like so:

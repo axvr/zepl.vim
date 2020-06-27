@@ -138,6 +138,7 @@ function! s:get_text(start, end, mode) abort
     return lines
 endfunction
 
+" XXX: This function is not intended for external use.
 function! zepl#send_region(type, ...) abort
     let sel_save = &selection
     let &selection = 'inclusive'

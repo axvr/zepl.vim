@@ -232,18 +232,18 @@ is expected that all |zepl-contrib| extensions will respect this option.
 This option defaults to `1` (use default bindings).
 
 ==============================================================================
- 5. REMAPPING KEYS     *<Plug>ReplSendRegion*  *<Plug>ReplSendVisual*  *zepl-remap*
+ 5. REMAPPING KEYS   *<Plug>ReplSend_Motion*  *<Plug>ReplSend_Visual*  *zepl-remap*
 
 Zepl.vim offers 2 |<Plug>| mappings to set your own keys to use to send text
 to the running REPL.
 
-The first: |<Plug>ReplSendRegion| is for use in |Normal-mode|.
+The first: |<Plug>ZeplSendMotion| is for use in |Normal-mode|.
 >
-    nmap <silent> <leader>s <Plug>ReplSendRegion
+    nmap <silent> <leader>s <Plug>ZeplSendMotion
 <
-The second: |<Plug>ReplSendVisual| is for use in |Visual-mode|.
+The second: |<Plug>ZeplSendVisual| is for use in |Visual-mode|.
 >
-    vmap <silent> <leader>s <Plug>ReplSendVisual
+    vmap <silent> <leader>s <Plug>ZeplSendVisual
 <
 I recommend setting both to the same key to make it easier to remember.
 

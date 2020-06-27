@@ -12,12 +12,12 @@ function! s:send_region_or_text(text, ...) abort
 endfunction
 command! -range -bang -nargs=* ReplSend call <SID>send_region_or_text(<q-args>, <line1>, <line2>, <q-bang>)
 
-nnoremap <silent> <Plug>ReplSendRegion :<C-u>set operatorfunc=zepl#send_region<CR>g@
-vnoremap <silent> <Plug>ReplSendVisual :<C-u>call zepl#send_region(visualmode(), 1)<CR>
+nnoremap <silent> <Plug>ReplSend_Motion :<C-u>set operatorfunc=zepl#send_region<CR>g@
+vnoremap <silent> <Plug>ReplSend_Visual :<C-u>call zepl#send_region(visualmode(), 1)<CR>
 
 if get(g:, 'zepl_default_maps', 1)
-    nmap <silent> gz <Plug>ReplSendRegion
-    vmap <silent> gz <Plug>ReplSendVisual
+    nmap <silent> gz <Plug>ReplSend_Motion
+    vmap <silent> gz <Plug>ReplSend_Visual
     nmap <silent> gzz gz_
     nmap <silent> gzZ gz$
 endif

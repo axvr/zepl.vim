@@ -1,23 +1,12 @@
 # Zepl.vim
 
-*Lightweight and easy REPL integration for Vim.*
+*Lightweight and easy REPL integration for Vim and Neovim.*
 
 Zepl is a lightweight, simple and easy to use REPL integration package for Vim
 8.1+ and Neovim.  It provides a small set of key bindings and commands to start
 and interact with a running REPL.
 
 <!-- TODO: GIF and/or images -->
-
-
-<!--
-## Design philosophies
-
-1. Should be easy to use and configure: not much to learn and very few
-   configuration options.
-2. Feel like a part of Vim.  Key bindings and commands should work just like
-   the built-in ones.
-3. Tiny implementation. (Must not exceed 200 LOC.)
--->
 
 
 ## Installation
@@ -76,16 +65,6 @@ section.
 To learn more about what the `:Repl` command can do, read the full manual
 (`:help zepl.txt`).
 
-<!--
-More powerful example:
-
-```vim
-" Open vertical REPL 60 columns wide on right of the screen connected to
-" a running Clojure socket REPL through netcat.
-:botright vertical 60 Repl rlwrap nc localhost 5555
-```
--->
-
 
 ### Jump to a running REPL
 
@@ -117,7 +96,7 @@ E.g. `vababgz` will start visual selection, select the current s-expression,
 expand to the outer s-expression and then send all of that to the REPL.
 
 Zepl provides a couple of short hand key bindings for the `gz` operator, these
-are 1. `gzz` rather than `gz_`; send the current line, 2. `gzZ` rather than
+are, 1. `gzz` rather than `gz_`; send the current line, 2. `gzZ` rather than
 `gz$`; send from the cursor position to the end of the line.
 
 To change the default key bindings and to learn more ways to send text to the
@@ -149,10 +128,10 @@ the "[Start a REPL](#start-a-repl)" section above.)
 #### Python
 
 Some languages have unusual syntax rules such as the white space sensitivity in
-Python.  This makes REPL usage much more difficult.  To alleviate the problem
-Zepl offers the ability to create "custom formatters" which sanitise the text
-before sending it to the REPL.  A Python custom formatter is shipped with Zepl
-and can be used like so.
+Python.  This makes REPL usage much more difficult.  To alleviate most
+problems, Zepl offers the ability to create "custom formatters" which sanitise
+the text before sending it to the REPL.  A Python custom formatter is shipped
+with Zepl and can be used like so.
 
 ```vim
 runtime zepl/contrib/python.vim  " Enable the Python contrib module.

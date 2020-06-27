@@ -12,7 +12,7 @@ function! zepl#contrib#python#formatter(text)
         let depth = len(matchstr(text[0], '\m\C^\s*'))
         let text = map(text, 'v:val[' . depth . ':]')
 
-        " Add empty line to end of multiline code (replaced by <CR> later on).
+        " Add empty line to end of multi-line code (replaced by <CR> later on).
         if len(text) > 1
             let text = add(text, '')
         endif

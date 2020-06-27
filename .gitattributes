@@ -1,4 +1,5 @@
 # See: https://axvr.io/projects/ascribe
-*           text=auto final-newline eol=lf
-*.vim       expand-tab tab-stop=4 trim-trailing-whitespace line-length=78
-doc/*       expand-tab tab-stop=4 trim-trailing-whitespace line-length=78
+*           text=auto final-newline eol=lf expand-tab trim-trailing-whitespace
+*.vim       tab-stop=4 line-length=78
+doc/*.txt   tab-stop=2 line-length=78
+*.md        tab-stop=2 line-length=80

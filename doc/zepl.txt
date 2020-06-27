@@ -276,11 +276,11 @@ v0.1 [2020-02-23]~
 
 All source code, documentation and associated files packaged with zepl.vim are
 dedicated to the public domain.  A full copy of the CC0 (Creative Commons Zero
-v1.0 Universal) public domain dedication should have been provided with this
+1.0 Universal) public domain dedication should have been provided with this
 extension in the `COPYING` file.
 
 The author is not aware of any patent claims which may affect the use,
 modification or distribution of this software.
 
 ------------------------------------------------------------------------------
-vim:et:ts=4:sts=4:sw=4:tw=78:ft=help:norl:
+vim:et:ts=2:sts=2:sw=2:tw=78:ft=help:norl:

@@ -97,4 +97,4 @@ Examples:
     :ReplLoadFile a.py b.py  " Load files into REPL.
 <
 ------------------------------------------------------------------------------
-vim:et:ts=4:sts=4:sw=4:tw=78:ft=help:norl:
+vim:et:ts=2:sts=2:sw=2:tw=78:ft=help:norl:

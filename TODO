@@ -1,1 +1,7 @@
-Improve README (Add GIF/images?)
+NEXT:
+  - Add GIF to README.
+  - Update documentation.
+
+MAYBE:
+  - Maybe make the bufnr publicly accessible (but locked).
+  - Add multiple REPL support.

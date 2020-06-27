@@ -4,28 +4,40 @@
                            Zepl.vim Extension Manual~
 
 
-Welcome to the zepl.vim community contributed extension manual.  *zepl-contrib*
+Welcome to the Zepl community contributed extension manual.  *zepl-contrib*
 
-As zepl.vim aims to be both lightweight and language agnostic, it can't really
-include any language-specific code, and it's feature-set is kept to a minimum.
-The downside of this is that a lot of developers (myself included) need these
-additional features and better language-specific support from their tools.
+This is the home of various potentially useful user contributed extensions for
+Zepl.  Nothing here is enabled by default; individual extensions can be
+enabled as desired.  Documentation for each extension can be found in this
+help doc.
 
-Zepl-contrib is my solution.  It allows me to ship optional features while
-keeping the core "true to its goals".
+If you have created some useful extensions for Zepl and think that others
+might also find them useful, please create a pull request.
 
-As far as I know, zepl.vim is the first Vim plugin to have such a system, so
-we'll see where this leads.
+Note: No guarantees are made as to the stability of these extensions.
 
-    1. Language-specific .......................... |zepl-languages|
-    2. Extra features ............................. |zepl-extra-features|
+    1. Rationale .................................. |zepl-contrib-rationale|
+    2. Language-specific .......................... |zepl-languages|
+    3. Extra features ............................. |zepl-extra-features|
 
-Note: Don't forget to check out the main |zepl.txt| manual.
+Don't forget to check out the main |zepl.txt| manual.
 
 ==============================================================================
- 1. LANGUAGE-SPECIFIC ENHANCEMENTS                             *zepl-languages*
+ 1. RATIONALE                                          *zepl-contrib-rationale*
 
-Language-specific enhancements for zepl.vim.
+My goal is to keep the Zepl core as minimal and bug-free as possible, this
+means that it cannot include language-specific code or many potentially useful
+features.  To resolve this issue I designed Zepl with extensibility in mind,
+and created this contrib system.
+
+The extensibility of Zepl makes it possible to add many desired features and
+add support for any language, even those with unusual syntax (e.g. Python:
+|zepl-python|).  The contrib system makes it possible to ship these with Zepl.
+
+==============================================================================
+ 2. LANGUAGE-SPECIFIC ENHANCEMENTS                             *zepl-languages*
+
+Language-specific enhancements for Zepl.
 
     * Python  |zepl-python|
 
@@ -36,15 +48,15 @@ Copy/adapt the code below to your |vimrc| to add improved Python support.
 >
     runtime zepl/contrib/python.vim
 
-    autocmd FileType python let b:repl_config = {
+    autocmd! FileType python let b:repl_config = {
                 \   'cmd': 'python',
                 \   'formatter': function('zepl#contrib#python#formatter')
                 \ }
 <
 ==============================================================================
- 2. EXTRA FEATURES                                        *zepl-extra-features*
+ 3. EXTRA FEATURES                                        *zepl-extra-features*
 
-Extra features for zepl.vim.
+Extra features for Zepl.
 
     * Load files  |zepl-load_files|
 
@@ -52,13 +64,11 @@ Extra features for zepl.vim.
                                           *zepl-load_files*  *:ReplLoadFile*  *gz.*
 
 Running `gggzG` to load the entire file into the REPL isn't great as it'll
-just fill the screen and history with junk.  Many REPLs and languages provide
-features to cleanly load a file into the environment.
+just fill the screen and history with junk.  Luckily many REPLs and languages
+provide features to cleanly load a file into the environment.  This Zepl
+extension makes it easier to use these features.
 
-|zepl-load_files| provides several easy ways to load a file into the REPL
-environment.
-
-Add the following code snippet to your |vimrc| to enable this feature.
+Add the following code snippet to your |vimrc| to enable this extension.
 >
     runtime zepl/contrib/load_files.vim
 <
@@ -87,8 +97,8 @@ Once configured, you can type `gz.` in |Normal-mode| to send the current file.
 This mapping can be disabled with 'g:zepl_default_maps' and rebound with the
 *<Plug>ReplLoadFile* plug.
 
-Alternatively use the |:ReplLoadFile| command.  Any number of files can be
-specified, but if none are, it'll load the current file.
+Alternatively, you can use the |:ReplLoadFile| command.  Any number of files
+can be specified, but if none are, it'll load the current file.
 
 Examples:
 >

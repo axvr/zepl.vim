@@ -1,6 +1,5 @@
 NEXT:
   - Add GIF to README.
-  - Update documentation.
 
 MAYBE:
   - Maybe make the bufnr publicly accessible (but locked).

@@ -1,91 +1,167 @@
-*zepl.txt*                                Lightweight REPL integration for Vim.
+*zepl.txt*            Lightweight and easy REPL integration for Vim and Neovim.
 
 
-                         Zepl.vim Manual by Alex Vear~
+                         Zepl.vim Manual — Alex Vear~
 
 
-Welcome to the zepl.vim user manual.           *zepl*  *zepl.vim*  *vim-zepl*  *repl*
+Welcome to the Zepl user manual.               *zepl*  *zepl.vim*  *vim-zepl*  *repl*
 
     1. Introduction ............................... |zepl-intro|
-    2. Installation ............................... |zepl-installation|
-    3. Quick start ................................ |zepl-quick-start|
-    4. Configuration .............................. |zepl-configuration|
-    5. Remapping keys ............................. |zepl-remap|
-    6. Change log ................................. |zepl-changelog|
-    7. Legal ...................................... |zepl-legal|
 
-Note: Don't forget to check out the |zepl-contrib.txt| manual for additional
-features and improved language support.
+    2. Quick start ................................ |zepl-quickstart|
+       2.1. Start a REPL .......................... |zepl-quickstart-start|
+       2.2. Jump to a running REPL ................ |zepl-quickstart-jump|
+       2.3. Sending text to the REPL .............. |zepl-quickstart-send|
+       2.4. Set default REPLs ..................... |zepl-quickstart-config|
+
+    3. Technical details .......................... |zepl-reference|
+       3.1. The REPL window ....................... |zepl-window|
+       3.2. Interacting with the REPL ............. |zepl-interaction|
+       3.3. Configuring Zepl ...................... |zepl-configuration|
+       3.4. Extending Zepl ........................ |zepl-extension|
+
+    4. Change log ................................. |zepl-changelog|
+
+    5. Legal ...................................... |zepl-legal|
+
+Note: Be sure to check out the |zepl-contrib.txt| manual for extra features
+and improved language support.
 
 ==============================================================================
  1. INTRODUCTION                                                   *zepl-intro*
 
-Zepl.vim is a lightweight REPL integration package for Vim 8.1+ and Neovim.
-It provides commands to start and jump to a running REPL, as well as commands
-and key bindings to send text to the REPL.
+Zepl is a lightweight, simple and easy to use REPL integration package for Vim
+8.1+ and Neovim.  It provides a small set of key bindings and commands to
+start and interact with a running REPL.
 
-Zepl.vim follows several design philosophies:
+Please be aware of the 2 known limitations of Zepl:
 
-1. Should be easy to use and configure: not much to learn and very few
-   configuration options.
-2. Feel like a part of Vim.  Key bindings and commands should work just like
-   the built-in ones.
-3. Tiny implementation. (Must not exceed 200 LOC.)
-
-There are a couple of known limitations:
-
-* Only 1 REPL can be open at a time (per Vim instance).
-* The 'hidden' option is required for Neovim and will be automatically set.
+  * Only 1 REPL can be open at a time (per Vim instance).
+  * 'hidden' is required for Neovim and will be automatically set.
 
 ==============================================================================
- 2. INSTALLATION                                            *zepl-installation*
-
-Installation of zepl.vim can be performed by using your preferred
-plugin/package management tool(s).  If you don't have a Vim package manager
-I recommend using Vim 8 packages.
-
-Just run these 2 commands from your shell.
->
-    git clone https://github.com/axvr/zepl.vim ~/.vim/pack/plugins/start/zepl
-    vim +'helptags ~/.vim/pack/plugins/start/zepl/doc/' +q
-<
-==============================================================================
- 3. QUICK START                                              *zepl-quick-start*
+ 2. QUICK START                                               *zepl-quickstart*
 
 The following is a short quick start guide.  For more detailed documentation,
-read the rest of the manual.
+refer to the |zepl-reference|.
 
+------------------------------------------------------------------------------
+ 2.1. START A REPL                                      *zepl-quickstart-start*
+
+Start a REPL by running the |:Repl| command followed by the command to start the
+REPL.  E.g.
+>
+    :Repl clj         " Start Clojure REPL
+    :Repl julia       " Start Julia REPL
+    :Repl rlwrap csi  " Start CHICKEN Scheme REPL with rlwrap
+<
+You can prepend modifiers (see: |<mods>|) to the command such as |:vertical|
+to start the REPL in a vertical split.  E.g.
+>
+    :vertical Repl clj              " Start Clojure REPL in a vertical split
+    :hide Repl julia                " Start Julia REPL in background
+    :vert botright Repl rlwrap csi  " Start CHICKEN Scheme REPL with rlwrap in a right vertical split
+<
+Follow these links to learn more about the |:Repl| command or how to configure
+default REPLs: |zepl-configuration|.
+
+------------------------------------------------------------------------------
+ 2.2. JUMP TO A RUNNING REPL                             *zepl-quickstart-jump*
+
+If you have already started a REPL you can jump to the buffer containing it by
+running |:Repl| with no arguments. This is useful if you opened the REPL in
+a background buffer with |:hide|.  E.g. `:hide Repl clj`
+
+------------------------------------------------------------------------------
+ 2.3. SENDING TEXT TO THE REPL                           *zepl-quickstart-send*
+
+The |gz| operator makes it possible to send text from any buffer to the REPL the
+same way you would with the built-in |operator|s (such as |d|, |y| and |gq|) by
+giving it a motion (see: |motions.txt|, e.g. |ip|, |a)|, |j|, |i}|).
+
+Examples include:
+>
+    gzip  " Send current paragraph
+    gzj   " Send current line and line below
+    gz2k  " Send current line and the 2 above it
+    gza)  " Send current s-expression
+<
+The |gz| |operator| is also available from |Visual| and visual-line modes so you can
+visually select the text you want to send before sending it.  E.g. `vababgz`
+will start visual selection, select the current s-expression, expand to the
+outer s-expression and then send all of that to the REPL.
+
+Zepl provides a couple of short hand key bindings for the |gz| operator, these
+are, 1. |gzz| rather than `gz_`; send the current line, 2. |gzZ| rather than `gz$`;
+send from the cursor position to the end of the line.
+
+To change the default key bindings and to learn more ways to send text to the
+REPL, see |zepl-remap| and |:ReplSend| respectively.
+
+------------------------------------------------------------------------------
+ 2.4. SET DEFAULT REPLS                                *zepl-quickstart-config*
+
+Zepl uses the (buffer local) 'b:repl_config' dictionary for configuration.
+The `'cmd'` key can be used to set a default REPL command used for a buffer.
+Common usage of this is with |autocmd|s or |ftplugin|s.
+>
+    augroup zepl
+        autocmd!
+        autocmd FileType javascript let b:repl_config = { 'cmd': 'node' }
+        autocmd FileType clojure    let b:repl_config = { 'cmd': 'clj' }
+        autocmd FileType scheme     let b:repl_config = { 'cmd': 'rlwrap csi' }
+        autocmd FileType julia      let b:repl_config = { 'cmd': 'julia' }
+    augroup END
+<
+(When a default REPL has been specified, you only need to run |:Repl| to start
+it.  The default can be overridden by using `:Repl <command>` as mentioned in
+the |zepl-quickstart-start| section above.)
+
+==============================================================================
+ 3. TECHNICAL DETAILS                                          *zepl-reference*
+
+This section covers exactly how each part of Zepl works, how to configure it
+and how to extend it.
+
+------------------------------------------------------------------------------
+ 3.1. THE REPL WINDOW                                             *zepl-window*
+..............................................................................
                                                                         *:Repl*
-Running a REPL~
 
-Start a REPL using the |:Repl| command.  This command is in the format:
+If a REPL isn't running, the `:Repl` command will open a new REPL, otherwise
+it will "jump" to the running REPL.  The command follows this format:
 >
     :[mods] [size] Repl [command]
 <
-Where `[mods]` is any of |<mods>| (e.g. |:vertical| to open REPL in a vertical
-split, or |:hide| to start the REPL in the background).
+`[mods]` (optional) is any number of |:command-modifiers|.  (E.g. |:vertical|
+will open the REPL in a vertical split, and |:hide| will start the REPL in the
+background.)  `[mods]` will be ignored if a REPL window is already open.
 
-`[size]` is the height of the REPL window.  If `[mods]` contained |:vertical|
-this will set the width of the REPL window.
+`[size]` (optional) is used to set the height of the REPL window.  (If `[mods]`
+contains |:vertical| this will set the width of the REPL window.)  `[size]` will
+be ignored if a REPL window is already open.
 
-`[command]` is the interpreter to use.  If omitted and a REPL is already
-running, zepl.vim will open/jump to that REPL, otherwise it'll use the command
-specified in the 'b:repl_config' variable.
+`[command]` (optional) is the command run to start the REPL.  If omitted and,
+1. no REPL is running: Zepl will attempt to start a REPL using the command in
+'b:repl_config'; 2. a REPL is running: Zepl will "jump" to that REPL.
 
-Examples:~
+You can configure how the REPL is opened by modifying the 'switchbuf' option.
+Zepl automatically sets the `useopen` flag.
+
+Examples:
 >
-    " Start a new REPL using command from `b:repl_config` or jump to already
+    " Start REPL using command from 'b:repl_config' or jump to already
     " running REPL.
     :Repl
 
     " Start REPL with command `clj` with height of 16 characters.
     :16 Repl clj
 
-    " Start REPL in vertical split with command from `b:repl_config` or jump
+    " Start REPL in vertical split with command from 'b:repl_config' or jump
     " to running REPL (open in vertical split if not already visible).
     :vert Repl
 
-    " Start REPL (command from `b:repl_config`) in background.
+    " Start REPL (command from 'b:repl_config') in background.
     :hide Repl
 
     " Open vertical REPL 60 columns wide on right of the screen connected to
@@ -95,57 +171,85 @@ Examples:~
     " Start REPL in new tab or open running REPL in new tab (if not open).
     :tab Repl
 <
-You can configure how the REPL is opened using the 'switchbuf' option.
-Zepl.vim automatically sets the `useopen` flag.
+..............................................................................
+                                                                 *zepl#start()*
 
+The `zepl#start()` function has exactly the same behaviour as the |:Repl| command,
+but follows a slightly different format.
+>
+    call zepl#start([command], [mods], [size])
+<
+All parameters are optional, the function returns nothing.
+
+Examples:
+>
+    " Start REPL using command from 'b:repl_config' or jump to already
+    " running REPL.
+    call zepl#start()
+
+    " Start REPL with command `clj`.
+    call zepl#start('clj')
+
+    " Start REPL in right vertical split with command from 'b:repl_config' or
+    " jump to running REPL (open in right vertical split if not already open).
+    call zepl#start('', 'botright vertical')
+
+    " Start REPL with command `csi` with no <mods> in a split of height 60.
+    call zepl#start('csi', '', 60)
+<
+..............................................................................
+                                                                  *zepl#jump()*
+
+The `zepl#jump()` function will "jump" to the running REPL by opening it in a
+|window| (if not already open), and then focusing that window.
+>
+    call zepl#jump([mods], [size])
+<
+All parameters are optional and the function returns nothing.
+
+You can configure how the REPL is opened by modifying the 'switchbuf' option.
+Zepl automatically sets the `useopen` flag.
+
+Examples:
+>
+    " Jump to running REPL.  If not visible, open in horizontal split.
+    call zepl#jump()
+
+    " Jump to running REPL.  If not visible, open in vertical split.
+    call zepl#jump('vertical')
+
+    " Jump to running REPL.  If not visible, open in right vertical split on
+    " of width 30.
+    call zepl#jump('vertical botright', 30)
+
+    " Jump to running REPL.  If not visible, open in horizontal split of
+    " height 16.
+    call zepl#jump('', 16)
+<
 ------------------------------------------------------------------------------
-Send text to REPL~
-
-Zepl.vim provides both a key binding and a command to send text from any
-buffer into a running REPL to be evaluated.
-
-                                                                   *gz* *gzz* *gzZ*
-Key bindings~
-
-The default key binding for zepl.vim is |gz|.  To change this, see |zepl-remap|.
-
-The |gz| key can accept any motion (see: |motion.txt|) you would do with
-another key such as |d|, |y|, |c|, |gq|, |=|, etc.  To send the current
-paragraph to the REPL use `gzip`.  To send the current s-expression to the
-REPL use `gza)`, or to send the current line use.
-
-|gz| will also work in visual mode, so you can also do `vipgz` to send the
-current paragraph.  `Vi3jgz` to send the next 4 lines to the REPL.  Even
-something complex like `vabababgz` will work (this selects the current
-s-expression, expand 2 levels out and sends the entire thing to the REPL).
-
-A couple of short hand key combinations are provided: |gzz| rather than `gz_`
-to send the current line, and |gzZ| rather than `gz$` to send from the cursor
-position to the end of the line.
-
+ 3.2. INTERACTING WITH THE REPL                              *zepl-interaction*
+..............................................................................
                                                                     *:ReplSend*
-Command~
 
-The `:ReplSend` command is somewhat similar to the key binding but has
-different usage, it also only works |linewise|.  The command follows this
-format:
+The `:ReplSend` command sends text to the running REPL.  In most cases the |gz|
+binding or |zepl#send()| function should be used instead.  The command follows
+this format:
 >
     :[range] ReplSend[!] [text]
 <
-You can either provide `[range]` or `[text]` to be sent to the REPL.  If you
-give both, only `[text]` will be sent.
+`[range]` is an Ex command-line range (see: |[range]|).
 
-`[range]` is an Ex command-line range (see |[range]|).  Note: like all
-standard Ex commands, `:ReplSend` will only operate on whole lines.
+`[text]` is any arbitrary text you want to send to the REPL.
 
-`[text]` is any arbitrary text you want to send to the REPL.  This is useful
-for scripting.
+`[!]` (|:command-bang|) will make Zepl send the text "verbatim", meaning that
+it won't modify the text in any way before sending it.
 
-`[!]` will tell zepl.vim to send the text "verbatim", meaning that it won't
-modify the text in any way.  In regular use this won't be used much, it mainly
-exists for programmability and sending literal characters to the REPL.
+If both `[range]` and `[text]` are given, only `[text]` will be sent.  If neither
+are given, it will send the current line.
 
-Examples:~
+Note: `:ReplSend` only works |linewise|.
+
+Examples:
 >
     " Send current line to REPL.
     :ReplSend
@@ -161,50 +265,145 @@ Examples:~
 
     " Send `print("Hello, world!")` to the REPL.
     :ReplSend print("Hello, world!")
+
+    " Send `print("Hello, world!")` to the REPL in multiple stages.
+    :ReplSend! print
+    :ReplSend! ("Hello, world!
+    :ReplSend ")
 <
-==============================================================================
- 4. CONFIGURATION                                          *zepl-configuration*
+..............................................................................
+                                                                  *zepl#send()*
 
-                                                              *'b:repl_config'*
+The `zepl#send()` function is mostly identical to the |:ReplSend| command.
+It's purpose is to enable programmatically sending text and character literals
+to the REPL.
 
-A buffer local variable containing a |Dictionary| for configuration of default
-REPL settings.
+It follows this format:
+>
+    call zepl#send([text], [verbatim])
+<
+`[text]` is a string containing the text to send.
 
-There are currently 2 keys in use:
+`[verbatim]` is an optional boolean (default: `0`), if set to `1`, it will send the
+text "verbatim" to the REPL, i.e. no modifications will be made before sending
+it to the REPL.
 
-  * `cmd`        (see: |zepl-cmd|)
-  * `formatter`  (see: |zepl-formatter|)
+The function returns nothing.
 
-Other keys may be defined by |zepl-contrib| extensions.
+When run in a script, Vim will interpret key bindings such as <C-l> and
+<C-c> which when used in combination with `[verbatim]` makes it possible
+to send key presses to the REPL.  (To send keys presses from |Command-line-mode|
+you can use the |c_CTRL-SHIFT-V| binding.)
+
+Examples:
+>
+    " Send `print("Hello, world!")` to the REPL.
+    call zepl#send('print("Hello, world!")')
+
+    " Same as previous example.
+    call zepl#send('print("Hello, world!")', 0)
+
+    " Send the string `Hello, world!` to the REPL without modifying it.
+    call zepl#send("Hello, world!", 1)
+
+    " Send the end-of-file control character (typically closes the REPL).
+    call zepl#send('<C-d>', 1)
+
+    " Create a command to clear the REPL screen.
+    command! -bar -nargs=0 ReplClear :call zepl#send('<C-l>', 1)
+    :ReplClear
+<
+..............................................................................
+                             *<Plug>ReplSend_Motion*  *<Plug>ReplSend_Visual*  *gz*
+
+The default key binding to send text to the REPL is |gz|.  It behaves just
+like any other |operator| in Vim by waiting for a motion (see: |motion.txt|).
+This behaviour can be assigned to another key using `<Plug>ReplSend_Motion`.
+
+The same binding also works from |Visual-mode|.  The visual mode behaviour can
+be bound to another key with `<Plug>ReplSend_Visual`.
+
+To change the default binding refer to |zepl-remap|.
+
+Examples:
+>
+    " Send the current paragraph.
+    gzip
+
+    " Send the current s-expression to the REPL.
+    gza)
+
+    " Send the next 4 lines to the REPL from Visual mode.
+    Vi3jgz
+
+    " Start visual mode, select current s-expression, expand 2 levels out,
+    " then send that to the REPL.
+    vabababgz
+<
+..............................................................................
+                                                                     *gzz*  *gzZ*
+
+Zepl provides a couple of short hand key combinations, 1. |gzz| rather than `gz_`,
+to send the current line; and 2. |gzZ| rather than `gz$`, to send from the cursor
+position to the end of the line.
 
 ------------------------------------------------------------------------------
-                                                                     *zepl-cmd*
+ 3.3. CONFIGURING ZEPL                                     *zepl-configuration*
+..............................................................................
+                                                              *'b:repl_config'*
 
-The `cmd` key for 'b:repl_config' allows you to specify a default interpreter
-command used by |:Repl|.
+A |buffer-variable| containing a |Dictionary| for configuring default REPL
+settings.
+
+Zepl only uses 2 keys, `cmd` and `formatter`.  Other keys may be used by
+|zepl-contrib| extensions and you can even add your own for use in your own
+extensions.
+
+The `cmd` key is used to set the default interpreter command used by |:Repl|.
 >
     augroup zepl
         autocmd!
-        autocmd FileType python     let b:repl_config = { 'cmd': 'python3' }
         autocmd FileType javascript let b:repl_config = { 'cmd': 'node' }
         autocmd FileType clojure    let b:repl_config = { 'cmd': 'clj' }
         autocmd FileType scheme     let b:repl_config = { 'cmd': 'rlwrap csi' }
-        autocmd FileType lisp       let b:repl_config = { 'cmd': 'sbcl' }
         autocmd FileType julia      let b:repl_config = { 'cmd': 'julia' }
     augroup END
 <
-Note: for better Python support see: |zepl-python|.
+See |zepl-formatter| to learn about the `formatter` key.
+
+..............................................................................
+                                            *'g:zepl_default_maps'*  *zepl-remap*
+
+If this option is set to `0`, all of the default key bindings will be disabled.
+(All |zepl-contrib| extensions respect this option.)  This option is set to `1` by
+default (i.e. use default bindings).
+
+To remap the keys, simply bind a new key to the relevant <Plug> mapping.  E.g.
+>
+    let g:zepl_default_maps = 0
+    nmap <silent> <Leader>s <Plug>ReplSend_Motion
+    vmap <silent> <Leader>s <Plug>ReplSend_Visual
+<
+WARNING: make sure to use |nmap| and |vmap| and not |nnoremap| or |vnoremap| as
+those don't work with <Plug> mappings.
 
 ------------------------------------------------------------------------------
-                                                               *zepl-formatter*
+ 3.4. EXTENDING ZEPL                                           *zepl-extension*
+..............................................................................
+                                     *zepl#generic_formatter()*  *zepl-formatter*
 
-Before text is sent to the REPL, zepl.vim will run it through a "formatter"
-function.  The default formatter only performs some basic repairs, however you
-can define your own custom formatters to modify the text in any way you wish.
-The most common use case for this is to add support for syntactically unusual
-languages such as Python (see: |zepl-languages| and |zepl-python|).
+Before text is sent to the REPL, Zepl runs it through a "formatter" function.
+(The "verbatim" flags on |:ReplSend| and |zepl#send()| bypass the formatter.)
 
-The formatter function can be specified using the `formatter` key in the
+The default formatter (`zepl#generic_formatter()`) performs minor repairs and
+appends a final newline character.
+
+You can create your own custom formatter to modify the text in any way you
+wish.  The most common use case for this is to add support for languages
+with unusual syntax, e.g. Python's whitespace sensitivity.  (Some custom
+formatters are shipped with Zepl, see |zepl-languages| to learn more.)
+
+A custom formatter function can be set with the `formatter` key in the
 'b:repl_config' dictionary.
 >
     let b:repl_config = {
@@ -212,48 +411,31 @@ The formatter function can be specified using the `formatter` key in the
             \   'formatter': function("zepl#contrib#python#formatter")
             \ }
 <
-The formatter will recieve 1 argument containing a list of lines to be
-processed.  It is expected that this function returns a string, with the lines
-joined by calling:
->
-    zepl#generic_formatter(text)
-<
-or:
->
-    join(text, "\<CR>") . "\<CR>"
-<
-An decent example formatter can be found in the `python.vim` contrib file.
+Note: Python is used as an example, but Zepl comes with a custom formatter for
+Python, see |zepl-python| to learn how to set it up.
 
-------------------------------------------------------------------------------
-                                                        *'g:zepl_default_maps'*
-If this option is set to `0`, the default key bindings will be disabled.  It
-is expected that all |zepl-contrib| extensions will respect this option.
-
-This option defaults to `1` (use default bindings).
+The formatter will be passed a single argument: a list of lines to process.
+The function should return a string, of all the lines joined by newline
+characters and a final newline added to the end.  This can be done by either
+calling the default formatter:
+>
+    return zepl#generic_formatter(text)
+<
+or by joining the lines (and adding the final newline) manually:
+>
+    return join(text, "\<CR>") . "\<CR>"
+<
+A more complete and complex example formatter can be found in the `python.vim`
+contrib file.
 
 ==============================================================================
- 5. REMAPPING KEYS   *<Plug>ReplSend_Motion*  *<Plug>ReplSend_Visual*  *zepl-remap*
+ 4. CHANGE LOG                                                 *zepl-changelog*
 
-Zepl.vim offers 2 |<Plug>| mappings to set your own keys to use to send text
-to the running REPL.
+v1.1 [2020-07-01]~
 
-The first: |<Plug>ZeplSendMotion| is for use in |Normal-mode|.
->
-    nmap <silent> <leader>s <Plug>ZeplSendMotion
-<
-The second: |<Plug>ZeplSendVisual| is for use in |Visual-mode|.
->
-    vmap <silent> <leader>s <Plug>ZeplSendVisual
-<
-I recommend setting both to the same key to make it easier to remember.
-
-See also: 'g:zepl_default_maps'.
-
-WARNING: make sure to use |nmap| and |vmap| and not |nnoremap| or |vnoremap| as
-those don't work with |<Plug>| mappings.
-
-==============================================================================
- 6. CHANGE LOG                                                 *zepl-changelog*
+  * Improved newline handling.
+  * Documentation overhaul.
+  * Improved naming of <Plug> mappings.
 
 v1.0 [2020-03-09]~
 
@@ -270,7 +452,7 @@ v0.1 [2020-02-23]~
   * Initial release.
 
 ==============================================================================
- 7. LEGAL                                                          *zepl-legal*
+ 5. LEGAL                                                          *zepl-legal*
 
 *No Rights Reserved*
 

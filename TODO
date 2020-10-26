@@ -1,6 +1,10 @@
-NEXT:
+* Next
   - Add GIF to README.
 
-MAYBE:
+* Maybe
   - Maybe make the bufnr publicly accessible (but locked).
   - Add multiple REPL support.
+    - Vim prompt asking which REPL to use.
+    - Set 'cmd' to a list of strings, or set 'cmd' to a Vim function.
+      - The function can then do the prompting and ask for additional info.
+    - In contrib?

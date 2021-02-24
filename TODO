@@ -8,3 +8,4 @@
     - Set 'cmd' to a list of strings, or set 'cmd' to a Vim function.
       - The function can then do the prompting and ask for additional info.
     - In contrib?
+  - Set custom buffer name.

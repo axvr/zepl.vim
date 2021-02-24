@@ -108,19 +108,18 @@ Examples:
     :ReplLoadFile a.py b.py  " Load files into REPL.
 <
 ------------------------------------------------------------------------------
-                                                       *zepl-control_characters*
+                                                      *zepl-control_characters*
 
-You might want to be able to send control characters such as newline,
-control-c, or control-d to your REPL.
+You might want to be able to send control characters such as newline, Ctrl-c,
+or Ctrl-d to your REPL.
 
 Add the following code snippet to your |vimrc| to enable this extension.
 >
     runtime zepl/contrib/control_characters.vim
 <
-
 Three key combinations for sending special characters are also provided:
-|gz<CR>| to send a newline, |gzc| to send control-c (SIGINT), and |gzq| to
-send control-d (eof).
+|gz<CR>| to send a newline, |gzc| to send Ctrl-c (SIGINT), and |gzq| to send
+Ctrl-d (eof).
 
 The default combination to switch to the window containing the REPL is
 |gz<TAB>|.
@@ -131,24 +130,20 @@ Four |<Plug>| mappings are also provided:
 >
     nmap <silent> <leader>s<CR> <Plug>ReplSendNewline
 <
-
   * |<Plug>ReplSendCtrlC| sends Ctrl-C (SIGINT) to the REPL.
 >
     nmap <silent> <leader>sc <Plug>ReplSendCtrlC
 <
-
   * |<Plug>ReplSendCtrlD| sends Ctrl-D (end-of-file) to the REPL.
 >
     nmap <silent> <leader>sd <Plug>ReplSendCtrlD
 <
-
   * |<Plug>ReplFocus| moves the cursor to the window in the tab containing the
-  REPL. If the REPL is not currently opened in a window, a new split window is
-  created.
+    REPL. If the REPL is not currently opened in a window, a new split window
+    is created.
 >
     nmap <silent> <leader>s<TAB> <Plug>ReplFocus
 <
-
 Note: You will likely want to disable zepl.vim's default key bindings before
 setting your own.  This can be done using 'g:zepl_default_maps'.
 

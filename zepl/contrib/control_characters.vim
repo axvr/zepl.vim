@@ -1,6 +1,6 @@
 " Description:  Send control characters to the REPL and easily focus it.
 " File:         zepl/contrib/control_characters.vim
-" Help:         :help zepl-load_files
+" Help:         :help zepl-control_characters
 " Legal:        No rights reserved.  Public domain.
 "
 function! s:jump_also_to_tab() abort

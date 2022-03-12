@@ -69,6 +69,7 @@ function! zepl#jump(...) abort
         return
     endif
 
+    let curtab = tabpagenr()
     let swb = &switchbuf
     set switchbuf+=useopen
 
@@ -83,6 +84,15 @@ function! zepl#jump(...) abort
     endif
 
     let &switchbuf = swb
+
+    " 'keep' focus in previous buffer.
+    if count(expanded_mods, 'keepalt') || count(expanded_mods, 'keepmarks')
+        if tabpagenr() != curtab
+            exec 'tabnext' curtab
+        else
+            wincmd p
+        endif
+    endif
 endfunction
 
 function! zepl#config(option, default)

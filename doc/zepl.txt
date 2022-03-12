@@ -146,6 +146,10 @@ it will "jump" to the running REPL.  The command follows this format:
 will open the REPL in a vertical split, and |:hide| will start the REPL in the
 background.)  `[mods]` will be ignored if a REPL window is already open.
 
+The |:keepalt| mod will open the repl but keep focus on the current window
+focused. The repl will be visible but not active so you can send commands and
+see them evaluate.
+
 `[size]` (optional) is used to set the height of the REPL window.  (If `[mods]`
 contains |:vertical| this will set the width of the REPL window.)  `[size]` will
 be ignored if a REPL window is already open.
@@ -165,6 +169,9 @@ Examples:
 
     " Start REPL with command `clj` with height of 16 characters.
     :16 Repl clj
+
+    " Start REPL with command `python` without changing the active window.
+    :keep Repl python
 
     " Start REPL in vertical split with command from 'b:repl_config' or jump
     " to running REPL (open in vertical split if not already visible).

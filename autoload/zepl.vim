@@ -75,6 +75,11 @@ function! zepl#jump(...) abort
 
     execute mods . ' sbuffer ' . s:repl_bufnr
 
+    if !get(b:, 'zepl_done_autocmd', 0) && exists('#User#ZeplTerminalWinOpen')
+        let b:zepl_done_autocmd = 1
+        doautocmd <nomodeline> User ZeplTerminalWinOpen
+    endif
+
     if size
         execute mods . ' resize ' . size
     endif

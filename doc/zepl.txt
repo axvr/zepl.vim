@@ -413,6 +413,15 @@ If no 'b:repl_config' variable exists, Zepl will use 'g:repl_config' as a
 fallback.
 
 ..............................................................................
+                                          *'ZeplTerminalWinOpen'*  *zepl-autocmd*
+
+Since zepl opens the terminal hidden, it will never fire the |TerminalWinOpen|
+autocmd. Instead, use the ZeplTerminalWinOpen autocmd which fires the first
+time a zepl window becomes active. Useful for |Terminal-Normal| mappings.
+>
+    au User ZeplTerminalWinOpen call ApplyMyTerminalMappings()
+<
+..............................................................................
                                             *'g:zepl_default_maps'*  *zepl-remap*
 
 If this option is set to `0`, all of the default key bindings will be disabled.

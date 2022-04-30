@@ -131,21 +131,7 @@ function! zepl#send(text, ...) abort
     if has('nvim')
         call chansend(getbufvar(s:repl_bufnr, '&channel'), text)
     else
-        let text = split(text, '\m\C[\r\n]\+\zs', 1)
-
-        for line in text
-            " 'firstchar' is a fix for rlwrap incorrectly detecting prompts.
-            " See: <https://github.com/axvr/zepl.vim/issues/9>
-            let firstchar = 1
-            for char in line
-                call term_sendkeys(s:repl_bufnr, char)
-                if firstchar
-                    call term_wait(s:repl_bufnr, 1)
-                    let firstchar = 0
-                endif
-            endfor
-            call term_wait(s:repl_bufnr)
-        endfor
+        call term_sendkeys(s:repl_bufnr, text)
     endif
 endfunction
 

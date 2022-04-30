@@ -39,8 +39,9 @@ add support for any language, even those with unusual syntax (e.g. Python:
 
 Language-specific enhancements for Zepl.
 
-    * Python  |zepl-python|
-    * F#      |zepl-fsharp|
+    * Python   |zepl-python|
+    * F#       |zepl-fsharp|
+    * Clojure  |zepl-clojure|
 
 ------------------------------------------------------------------------------
                                                                   *zepl-python*
@@ -65,6 +66,28 @@ Copy/adapt the code below to your |vimrc| to add improved F# support.
                 \   'cmd': 'dotnet fsi',
                 \   'formatter': function('zepl#contrib#fsharp#formatter')
                 \ }
+<
+------------------------------------------------------------------------------
+                                                                 *zepl-clojure*
+
+Copy/adapt the code below to your |vimrc| to add improved Clojure support.
+>
+    runtime zepl/contrib/clojure.vim
+
+    autocmd! FileType clojure let b:repl_config = {
+                \     'cmd': filereadable('deps.edn') ? 'clj' : 'lein repl',
+                \     'formatter': function('zepl#contrib#clojure#formatter')
+                \ }
+
+The Clojure plugin also includes the |:LoadClojureNS| and |:UseClojureNS|
+commands to make requiring, reloading, and switching to namespaces easier.
+..............................................................................
+                                                               *:LoadClojureNS*
+
+..............................................................................
+                                                                *:UseClojureNS*
+
+
 <
 ==============================================================================
  3. EXTRA FEATURES                                        *zepl-extra-features*

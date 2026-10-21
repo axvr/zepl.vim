@@ -2,8 +2,6 @@
   - Add a GIF to the README?
 
 - Configurability
-  - Maybe make the `bufnr` publicly accessible (but locked).
-    - Return from `zepl#start()` and `zepl#jump()`?
   - Typing speed controls (e.g. for use over serial connections with picocom).
     - `line_delay`, `char_delay`
   - Improve default formatter.
@@ -19,7 +17,7 @@
 
 - Usability
   - Contrib modules with better defaults for specific languages.
-    - Python, F#, Clojure, etc.
+    - Python, F#, Clojure, Erlang, etc.
     - E.g. `runtime! zepl/contrib/fsharp_defaults.vim`
       - Auto-enable and configure load-files, cmd and formatter.
       - Bind `'keywordprg'` to a useful value.

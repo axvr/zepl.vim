@@ -54,7 +54,7 @@ function! zepl#start(cmd, ...) abort
         call setbufvar(s:repl_bufnr, 'zepl_cmd', cmd)
     endif
 
-    call zepl#jump(get(a:, 1, ''), get(a:, 2, 0))
+    return zepl#jump(get(a:, 1, ''), get(a:, 2, 0))
 endfunction
 
 function! s:repl_closed(...) abort
@@ -105,6 +105,8 @@ function! zepl#jump(...) abort
     elseif has('nvim')
         startinsert
     endif
+
+    return { 'bufnr': s:repl_bufnr }
 endfunction
 
 function! zepl#config(option, default)

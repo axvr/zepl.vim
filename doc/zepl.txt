@@ -102,7 +102,7 @@ REPL, see |zepl-remap| and |:ReplSend| respectively.
 ------------------------------------------------------------------------------
  2.4. SET DEFAULT REPLS                                *zepl-quickstart-config*
 
-Zepl uses the 'g:repl_config' dictionary for configuration.  The keys are
+Zepl uses the |'g:repl_config'| dictionary for configuration.  The keys are
 |filetypes| and the values are dictionaries of configuration options for that
 filetype.
 
@@ -120,7 +120,7 @@ command for buffers of that filetype.
 it.  The default can be overridden by using `:Repl <command>` as mentioned in
 the |zepl-quickstart-start| section above.)
 
-There also exists a 'b:repl_config' variable if you prefer to keep your REPL
+There also exists a |'b:repl_config'| variable if you prefer to set your REPL
 configurations in |ftplugin| files or |autocmd|s.
 
 Full details on configuring Zepl can be found at |zepl-configuration|.
@@ -155,9 +155,10 @@ examples of mods are:
 contains |:vertical| this will set the width of the REPL window.)  `[size]` will
 be ignored if a REPL window is already open.
 
-`[command]` (optional) is the command run to start the REPL.  If omitted and,
-1. no REPL is running: Zepl will attempt to start a REPL using the command in
-'b:repl_config'; 2. a REPL is running: Zepl will "jump" to that REPL.
+`[command]` (optional) is the command run to start the REPL.  If omitted and:
+  1. a REPL is running: Zepl will "jump" (|zepl#jump()|) to that REPL,
+  2. no REPL is running: Zepl will attempt to start a REPL using the command
+     in |'b:repl_config'| (or |'g:repl_config'|).
 
 You can configure how the REPL is opened by modifying the 'switchbuf' option.
 Zepl automatically sets the `useopen` flag.
@@ -194,9 +195,10 @@ Examples:
 The `zepl#start()` function has exactly the same behaviour as the |:Repl| command,
 but follows a slightly different format.
 >
-    call zepl#start([command], [mods], [size])
+    call zepl#start(command, [mods], [size])
 <
-All parameters are optional, the function returns nothing.
+Only the `command` parameter is required, but can be passed an empty string to
+use the relevant default command.  It returns the same value as |zepl#jump()|.
 
 Examples:
 >
@@ -222,7 +224,9 @@ The `zepl#jump()` function will "jump" to the running REPL by opening it in a
 >
     call zepl#jump([mods], [size])
 <
-All parameters are optional and the function returns nothing.
+All parameters are optional and the function returns a dictionary containing a
+`'bufnr'` key with the value of the buffer number of the jumped to REPL.  More
+data may be added in the future.
 
 You can configure how the REPL is opened by modifying the 'switchbuf' option.
 Zepl automatically sets the `useopen` flag.
@@ -452,7 +456,7 @@ with unusual syntax, e.g. Python's whitespace sensitivity.  (Some custom
 formatters are shipped with Zepl, see |zepl-languages| to learn more.)
 
 A custom formatter function can be set with the `formatter` key in the
-'b:repl_config' dictionary.
+|'b:repl_config'| dictionary.
 >
     let b:repl_config = {
             \   'cmd': 'python3',
@@ -505,6 +509,7 @@ v1.7 [UNRELEASED]~
   * Removed the `rlwrap` artefacting "fix" as the issue appears to have been
     fixed in Vim or rlwrap.
   * Fixes for Neovim from a fork: https://github.com/idbrii/zepl.vim
+  * Return REPL buffer number from |zepl#start()| and |zepl#jump()| functions.
   * Several small documentation fixes.
 
 v1.6 [2023-08-06]~

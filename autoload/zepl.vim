@@ -35,7 +35,13 @@ function! zepl#start(cmd, ...) abort
             " Neovim's terminal can't be opened in the background, so:
             " Open it, make it hideable, then close it.
             split | enew
-            call termopen(cmd, {'on_exit': function('<SID>repl_closed')})
+            let opts = {'on_exit': function('<SID>repl_closed')}
+            if has('nvim-0.11')
+                call jobstart(cmd, extend(opts, {'term': v:true}))
+            else
+                " `termopen` is deprecated on Neovim 0.11+
+                call termopen(cmd, opts)
+            endif
             setlocal bufhidden=hide
             exec 'file ' . name | let b:term_title = name
             let s:repl_bufnr = bufnr('%')

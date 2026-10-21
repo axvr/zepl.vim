@@ -510,6 +510,7 @@ v1.7 [UNRELEASED]~
     fixed in Vim or rlwrap.
   * Fixes for Neovim from a fork: https://github.com/idbrii/zepl.vim
   * Return REPL buffer number from |zepl#start()| and |zepl#jump()| functions.
+  * If on Neovim 0.11+, use |jobstart()| instead of |termopen()|.
   * Several small documentation fixes.
 
 v1.6 [2023-08-06]~

@@ -1,5 +1,5 @@
 " ===================== ZEPL.VIM =====================
-" Repository:   <https://github.com/axvr/zepl.vim>
+" Repository:   <https://codeberg.org/axvr/zepl.vim>
 " File:         autoload/zepl.vim
 " Author:       Alex Vear <alex@vear.uk>
 " Legal:        No rights reserved.  Public domain.

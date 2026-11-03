@@ -6,6 +6,11 @@ Zepl is a lightweight, simple and easy to use REPL integration package for Vim
 8.1+ and Neovim.  It provides a small set of key bindings and commands to start
 and interact with a running REPL.
 
+(This Git repository is mirrored to
+[Codeberg](https://codeberg.org/axvr/zepl.vim),
+[Sourcehut](https://git.sr.ht/~axvr/zepl.vim) and
+[GitHub](https://github.com/axvr/zepl.vim).)
+
 
 ## Why use Zepl?
 
@@ -16,9 +21,7 @@ following goals:
 2. Be highly extensible and customisable.
 3. Do only what is required.
 
-While it certainly is [not perfect][zepl2], I believe Zepl achieves these goals.
-
-[zepl2]: https://github.com/axvr/codedump/tree/master/2021/zepl2.vim
+While it certainly is not perfect, I believe Zepl achieves these goals.
 
 - Zepl is one of the smallest, simplest and most stable REPL plugins available.
 - Its [`gz` operator](#sending-text-to-the-repl) and commands behave like
@@ -46,7 +49,7 @@ management solution.  If you don't have a Vim package manager I recommend using
 following 2 commands in your shell.
 
 ```sh
-git clone https://github.com/axvr/zepl.vim ~/.vim/pack/plugins/start/zepl
+git clone https://codeberg.org/axvr/zepl.vim ~/.vim/pack/plugins/start/zepl
 vim +'helptags ~/.vim/pack/plugins/start/zepl/doc/' +q
 ```
 

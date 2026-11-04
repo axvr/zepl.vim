@@ -8,7 +8,7 @@ and interact with a running REPL.
 
 (This Git repository is mirrored to
 [Codeberg](https://codeberg.org/axvr/zepl.vim),
-[Sourcehut](https://git.sr.ht/~axvr/zepl.vim) and
+[SourceHut](https://git.sr.ht/~axvr/zepl.vim) and
 [GitHub](https://github.com/axvr/zepl.vim).)
 
 
